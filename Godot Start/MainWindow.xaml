@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Godot_Start.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Godot_Start"
+    xmlns:localVM="using:ViewModels"
+    xmlns:converter="using:DataConverter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Godot Start">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="415"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+
+            <ComboBox Grid.Row="0"
+                      Name="CurrentVersion" 
+                      SelectionChanged="CurrentVersion_SelectionChanged" 
+                      Header="Current Godot Version" 
+                      PlaceholderText="Pick a Version" 
+                      Width="200"
+                      ItemsSource="{x:Bind ViewModel.DownloadedVersions}"
+                      DisplayMemberPath="Name"
+                      Margin="10,10,0,20"/>
+
+
+            <Grid Margin="10,20,0,0" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Manage Godot Versions" 
+                           Margin="0,0,0,10" 
+                           Grid.Row="0"/>
+
+
+                <Grid Margin="0,0,0,20" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <DropDownButton Content="Version Type">
+                        <DropDownButton.Flyout>
+                            <Flyout>
+                                <StackPanel Name="VersionTypeCheckboxes" Orientation="Vertical">
+                                </StackPanel>
+                            </Flyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+
+                    <CheckBox Content="Use Mono/C#"
+                              DataContext="{x:Bind ViewModel.UseMono}"
+                              Click="Mono_Checkbox_Click"
+                              Margin="30,0,0,0"
+                              Grid.Column="1" />
+                </Grid>
+
+
+                <ScrollView Width="400" 
+                            ContentOrientation="None"
+                            ZoomMode="Disabled" 
+                            IsTabStop="True"
+                            VerticalAlignment="Stretch" 
+                            HorizontalAlignment="Left"
+                            HorizontalScrollMode="Auto" 
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollMode="Auto" 
+                            VerticalScrollBarVisibility="Auto" 
+                            Grid.Row="2">
+
+                    <ListView ItemsSource="{x:Bind ViewModel.FilteredVersions, Mode=OneWay}" SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="localVM:VersionViewModel">
+                                <Grid>
+                                    <Grid.Resources>
+                                        <converter:NotConverter x:Key="NotConverter" />
+                                    </Grid.Resources>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Button Click="Remove_Version_Button_Click" 
+                                            Grid.Column="0"                                            
+                                            Tag="{x:Bind Name}"
+                                            IsEnabled="{Binding Path=Downloaded}"
+                                            ToolTipService.ToolTip="Remove">
+                                        <Button.Resources>
+                                            <ResourceDictionary>
+                                                <ResourceDictionary.ThemeDictionaries>
+                                                    <ResourceDictionary x:Key="Default">
+                                                        <SolidColorBrush x:Key="ButtonBackground" Color="#ff9a9a"/>
+                                                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#ffcccc"/>
+                                                        <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="LightGray"/>
+                                                    </ResourceDictionary>
+                                                </ResourceDictionary.ThemeDictionaries>
+                                            </ResourceDictionary>
+                                        </Button.Resources>
+
+                                        <Image Source="/Assets/delete_black.png"/>
+                                    </Button>
+
+                                    <Button Click="Download_Version_Button_Click" 
+                                            Grid.Column="1"
+                                            IsEnabled="{Binding Path=Downloaded, Converter={StaticResource NotConverter}}"
+                                            Tag="{x:Bind Name}"
+                                            ToolTipService.ToolTip="Download">
+                                        <Button.Resources>
+                                            <ResourceDictionary>
+                                                <ResourceDictionary.ThemeDictionaries>
+                                                    <ResourceDictionary x:Key="Default">
+                                                        <SolidColorBrush x:Key="ButtonBackground" Color="LightGreen"/>
+                                                        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#baffb9"/>
+                                                        <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="LightGray"/>
+                                                    </ResourceDictionary>
+                                                </ResourceDictionary.ThemeDictionaries>
+                                            </ResourceDictionary>
+                                        </Button.Resources>
+
+                                        <Image Source="/Assets/download_black.png"/>
+                                    </Button>
+
+                                    <TextBlock Grid.Column="2"
+                                               Text="{x:Bind Name}"
+                                               x:Phase="1"
+                                               Style="{ThemeResource BaseTextBlockStyle}"
+                                               Margin="12,6,0,0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollView>
+            </Grid>
+        </Grid>
+
+
+        <Grid Grid.Column="1" 
+              Background="#fafafa" 
+              BorderThickness="1" 
+              BorderBrush="Gray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="19"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="Projects"
+                       FontWeight="Bold"
+                       FontSize="30"
+                       HorizontalAlignment="Center" 
+                       Style="{ThemeResource BaseTextBlockStyle}"
+                       Margin="0,20,0,15"/>
+
+            <Grid Grid.Row="1" 
+                  BorderThickness="1" 
+                  BorderBrush="Gray"
+                  Margin="0,5,0,13"/>
+
+            <ScrollView ContentOrientation="None"
+                        ZoomMode="Disabled" 
+                        IsTabStop="True"
+                        VerticalAlignment="Stretch" 
+                        HorizontalAlignment="Stretch"
+                        HorizontalScrollMode="Auto" 
+                        HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollMode="Auto" 
+                        VerticalScrollBarVisibility="Auto" 
+                        Grid.Row="2">
+
+                <ListView ItemsSource="{x:Bind ViewModel.Projects, Mode=OneWay}" SelectionMode="Single"  >
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="localVM:ProjectViewModel">
+                            <Grid DoubleTapped="ListView_DoubleTapped">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                </Grid.RowDefinitions>
+
+                                <Button Grid.Column="0"                                            
+                                        Tag="{x:Bind Name}"
+                                        ToolTipService.ToolTip="Open Project"
+                                        Click="Button_Click">
+                                    <Image Source="/Assets/open_black.png"/>
+                                </Button>
+
+                                <TextBlock Grid.Column="1"
+                                           Text="{x:Bind Name}"
+                                           Style="{ThemeResource BaseTextBlockStyle}"
+                                           Margin="12,6,0,0"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollView>
+        </Grid>
+    </Grid>
+    <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+    </StackPanel>-->
+</Window>
+    

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Godot Start (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Godot Start (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
