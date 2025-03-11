@@ -340,8 +340,6 @@ namespace Godot_Start
 
             try
             {
-                // Start the process with the info we specified.
-                // Call WaitForExit and then the using statement will close.
                 using Process? exeProcess = Process.Start(startInfo);
             }
             catch
