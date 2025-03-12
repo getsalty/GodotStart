@@ -19,6 +19,18 @@ This is how it currently looks:
 
 ### FAQ
 
+1. Do you have a roadmap?
+
+- All milestones will be tracked via issues. Feel free to look there for any information.
+
+2. Why are you auto-generating your view models in a separate project?
+
+- I saw someone recommend it online, so I decided to try it out. Normally I refrain from auto-generation, but we will see if I stick with this package. It forces the observable properties to be very simplistic, which has turned a few simply problems into more difficult challenges.
+
+3. Linux? Mac?
+
+- Possibly, but not yet explicitly on the plan.
+
 ### License
 
 Copyright &#169;2025 Garrett Long
