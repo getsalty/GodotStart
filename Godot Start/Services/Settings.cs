@@ -12,7 +12,7 @@ namespace Godot_Start.Services
     public class Settings
     {
         //private static readonly string path = System.AppDomain.CurrentDomain.BaseDirectory + "Godot Start.exe.config";
-        private static readonly string path = "D:\\GitRepos\\godot-start\\Godot Start\\.config";
+        private static readonly string path = "D:\\GitRepos\\GodotStart\\Godot Start\\.config";
         public static readonly Config config = ReadConfig();
 
 

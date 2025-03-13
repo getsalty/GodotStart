@@ -10,7 +10,7 @@ namespace Godot_Start.Services
 {
     public class GodotDownloads
     {
-        public static readonly string path = "D:\\GitRepos\\godot-start\\Godot Start\\downloads\\";
+        public static readonly string path = "D:\\GitRepos\\GodotStart\\Godot Start\\downloads\\";
 
         public static async void DownloadVersion(string url, string name)
         {

@@ -16,7 +16,7 @@ namespace Godot_Start.Services
     public class VersionChecker
     {
         private static readonly string versionURL = "https://api.github.com/repos/godotengine/godot-builds/releases";
-        private static readonly string path = "D:\\GitRepos\\godot-start\\Godot Start\\.versions";
+        private static readonly string path = "D:\\GitRepos\\GodotStart\\Godot Start\\.versions";
         private static readonly HttpClient client = new();
 
         public static async Task<List<Version>?> GetVersionsAPI()
