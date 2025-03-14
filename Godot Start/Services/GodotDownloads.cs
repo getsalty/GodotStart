@@ -12,7 +12,7 @@ namespace Godot_Start.Services
     {
         public static readonly string path = "D:\\GitRepos\\GodotStart\\Godot Start\\downloads\\";
 
-        public static async void DownloadVersion(string url, string name)
+        public static async Task DownloadVersion(string url, string name)
         {
             if (!Path.Exists(path))
             {
@@ -40,10 +40,16 @@ namespace Godot_Start.Services
                 return;
             }
 
-            File.Delete(path + name);
+            try
+            {
+                File.Delete(path + name);
 
-            var unzippedDir = path + (name.Contains("_win64.exe") ? name[0..^8] : name[0..^4]);
-            Directory.Delete(unzippedDir, true);
+                var unzippedDir = path + (name.Contains("_win64.exe") ? name[0..^8] : name[0..^4]);
+                Directory.Delete(unzippedDir, true);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
