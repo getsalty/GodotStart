@@ -47,7 +47,13 @@ namespace ViewModels
         private string _variant;
 
         [Property]
-        private bool _downloaded;
+        private bool _showDelete;
+
+        [Property]
+        private bool _showDownload;
+
+        [Property]
+        private bool _showPending;
 
         [Property]
         private DateTime _createdAt;

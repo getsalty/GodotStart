@@ -89,6 +89,7 @@
                                 <Grid>
                                     <Grid.Resources>
                                         <converter:NotConverter x:Key="NotConverter" />
+                                        <converter:VisibilityConverter x:Key="VisibilityConverter" />
                                     </Grid.Resources>
 
                                     <Grid.ColumnDefinitions>
@@ -104,7 +105,7 @@
                                     <Button Click="Remove_Version_Button_Click" 
                                             Grid.Column="0"                                            
                                             Tag="{x:Bind Name}"
-                                            IsEnabled="{Binding Path=Downloaded}"
+                                            Visibility="{Binding Path=ShowDelete, Converter={StaticResource VisibilityConverter}}"
                                             ToolTipService.ToolTip="Remove">
                                         <Button.Resources>
                                             <ResourceDictionary>
@@ -123,9 +124,9 @@
 
                                     <Button Click="Download_Version_Button_Click" 
                                             Grid.Column="1"
-                                            IsEnabled="{Binding Path=Downloaded, Converter={StaticResource NotConverter}}"
                                             Tag="{x:Bind Name}"
-                                            ToolTipService.ToolTip="Download">
+                                            ToolTipService.ToolTip="Download"
+                                            Visibility="{Binding Path=ShowDownload, Converter={StaticResource VisibilityConverter}}">
                                         <Button.Resources>
                                             <ResourceDictionary>
                                                 <ResourceDictionary.ThemeDictionaries>
@@ -140,6 +141,14 @@
 
                                         <Image Source="/Assets/download_black.png"/>
                                     </Button>
+
+                                    <Image Grid.Column="1" 
+                                           Source="/Assets/loading.gif"                                          
+                                           Name="LoadingSpinner" 
+                                           Width="18"
+                                           Height="18"
+                                           Visibility="{Binding Path=ShowPending, Converter={StaticResource VisibilityConverter}}"
+                                           Margin="9,0,9,0"/>
 
                                     <TextBlock Grid.Column="2"
                                                Text="{x:Bind Name}"

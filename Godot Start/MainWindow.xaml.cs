@@ -1,25 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Godot_Start.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using ViewModels;
-using System.Globalization;
-using Godot_Start.Services;
-using System.Threading.Tasks;
-using Version = Godot_Start.Services.Version;
-using System.Net;
-using System.Net.Http;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using ViewModels;
+using Version = Godot_Start.Services.Version;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -105,7 +93,7 @@ namespace Godot_Start
                 var currentAsset = version.Assets.ToList().Find(asset => asset.Name.Contains(versionPostfix));
                 var isDownloaded = Settings.config.Downloads.ToList().Contains(currentAsset?.Name ?? "");
 
-                var newItem = new VersionViewModel { Name = version.Name, Variant = variant, Downloaded = isDownloaded, CreatedAt = version.CreatedAt };
+                var newItem = new VersionViewModel { Name = version.Name, Variant = variant, CreatedAt = version.CreatedAt, ShowDelete = isDownloaded, ShowDownload = !isDownloaded, ShowPending = false };
                 ViewModel.Versions.Add(newItem);
             }
 
@@ -145,7 +133,10 @@ namespace Godot_Start
             string removedName = (string)((Button)sender).Tag;
 
             var removedItem = ViewModel.Versions.First(version => version.Name == removedName);
-            removedItem.Downloaded = false;
+            removedItem.ShowDownload = true;
+            removedItem.ShowDelete = false;
+            removedItem.ShowPending = false;
+
 
             var removedVersion = _referenceVersions?.First(version => version.Name == removedItem.Name);
 
@@ -178,7 +169,9 @@ namespace Godot_Start
             string addedName = (string)((Button)sender).Tag;
 
             var addedItem = ViewModel.Versions.First(version => version.Name == addedName);
-            addedItem.Downloaded = true;
+            addedItem.ShowDownload = false;
+            addedItem.ShowDelete = false;
+            addedItem.ShowPending = true;
 
             var addedVersion = _referenceVersions?.First(version => version.Name == addedItem.Name);
 
@@ -194,10 +187,22 @@ namespace Godot_Start
                 return;
             }
 
-            GodotDownloads.DownloadVersion(addedAsset.BrowserDownloadUrl, addedAsset.Name);
+            DownloadVersion(addedAsset, addedName);
+        }
+
+        private async void DownloadVersion(Asset addedAsset, string addedName)
+        {
+            await GodotDownloads.DownloadVersion(addedAsset.BrowserDownloadUrl, addedAsset.Name);
+            var addedItem = ViewModel.Versions.First(version => version.Name == addedName);
+            addedItem.ShowDownload = false;
+            addedItem.ShowDelete = true;
+            addedItem.ShowPending = false;
+
+
             Settings.AddInstalledVersion(addedAsset.Name);
             UpdateSelectedVersion();
         }
+
 
         private void VersionType_Checkbox_Click(object sender, RoutedEventArgs e, string variant)
         {

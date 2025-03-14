@@ -17,6 +17,7 @@
     <None Remove="Assets\delete_white.png" />
     <None Remove="Assets\download_black.png" />
     <None Remove="Assets\download_white.png" />
+    <None Remove="Assets\loading.gif" />
   </ItemGroup>
 
   <ItemGroup>
