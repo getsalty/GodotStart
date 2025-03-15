@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ViewModels;
+using Windows.Graphics;
 using Version = Godot_Start.Services.Version;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -25,6 +26,14 @@ namespace Godot_Start
         public MainWindow()
         {
             this.InitializeComponent();
+
+            SizeInt32 a = new()
+            {
+                Height = 700,
+                Width = 1200
+            };
+
+            this.AppWindow.Resize(a);
 
             ViewModel = new();
 
