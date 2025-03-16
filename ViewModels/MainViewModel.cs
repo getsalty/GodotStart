@@ -23,8 +23,6 @@ namespace ViewModels
             {
                 VersionTypes.Add(new VersionTypesViewModel { Name = versionTypeNames[i] });
             }
-
-            Projects.Add(new ProjectViewModel { Name = "Kids Game", DirectoryPath = "D:\\Godot\\Kids Game" });
         }
 
         public ObservableCollection<VersionViewModel> Versions { get; } = [];

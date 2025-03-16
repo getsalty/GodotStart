@@ -34,6 +34,16 @@ namespace Godot_Start.Services
             File.WriteAllText(path, newConfig);
         }
 
+        public static void AddImportedProject(ProjectData project)
+        {
+            var importedProjects = config.Projects.ToList();
+            importedProjects.Add(project);
+            config.Projects = [.. importedProjects];
+
+            var newConfig = JsonSerializer.Serialize(config);
+            File.WriteAllText(path, newConfig);
+        }
+
         public static void RemoveInstalledVersion(string name)
         {
             var downloadList = config.Downloads.ToList();
@@ -90,7 +100,7 @@ namespace Godot_Start.Services
         {
             var json = File.ReadAllText(path);
 
-            if (json != "")
+            if (!string.IsNullOrWhiteSpace(json))
             {
                 return json;
             }
@@ -113,6 +123,27 @@ namespace Godot_Start.Services
 
             [JsonPropertyName("selectedVersionTypes")]
             public string[] SelectedVersionTypes { get; set; } = ["Stable"];
+
+            [JsonPropertyName("projects")]
+            public ProjectData[] Projects { get; set; } = [];
+        }
+
+        public class ProjectData
+        {
+            [JsonPropertyName("name")]
+            public required string Name { get; set; }
+
+            [JsonPropertyName("version")]
+            public string? Version { get; set; }
+
+            [JsonPropertyName("type")]
+            public string? Type { get; set; }
+
+            [JsonPropertyName("iconUID")]
+            public string? IconUID { get; set; }
+
+            [JsonPropertyName("directoryPath")]
+            public required string DirectoryPath { get; set; }
         }
     }
 }
