@@ -381,6 +381,7 @@ namespace Godot_Start
             var folder = await SelectFolder();
             if (folder is null)
             {
+                senderButton.IsEnabled = true;
                 return;
             }
 
@@ -388,6 +389,7 @@ namespace Godot_Start
             if (projectData is null)
             {
                 // freak out?
+                senderButton.IsEnabled = true;
                 return;
             }
 
