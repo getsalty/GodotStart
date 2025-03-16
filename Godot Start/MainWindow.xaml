@@ -7,7 +7,8 @@
     xmlns:localVM="using:ViewModels"
     xmlns:converter="using:DataConverter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:pickers="using:Windows.Storage.Pickers"
     mc:Ignorable="d"
     Title="Godot Start">
 
@@ -170,6 +171,7 @@
               BorderBrush="Gray">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="19"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -182,7 +184,44 @@
                        Style="{ThemeResource BaseTextBlockStyle}"
                        Margin="0,20,0,15"/>
 
-            <Grid Grid.Row="1" 
+            <Button x:Name="ImportProjectOpenButton"
+                    Grid.Row="1"
+                    ToolTipService.ToolTip="Import Project"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,5,0"
+                    Click="Import_Project_Button_Click">
+                <Button.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.ThemeDictionaries>
+                            <ResourceDictionary x:Key="Default">
+                                <SolidColorBrush x:Key="ButtonBackground" Color="LightGreen"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#baffb9"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="LightGray"/>
+                            </ResourceDictionary>
+                        </ResourceDictionary.ThemeDictionaries>
+                    </ResourceDictionary>
+                </Button.Resources>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0"
+                           Source="/Assets/add_black.png"
+                           Margin="-12,0,0,0"
+                           Width="10"/>
+
+                    <TextBlock Grid.Column="1"
+                               Text="Import"
+                               HorizontalAlignment="Center" 
+                               FontSize="12"
+                               Style="{ThemeResource BaseTextBlockStyle}"/>
+                </Grid>
+            </Button>
+
+            <Grid Grid.Row="2" 
                   BorderThickness="1" 
                   BorderBrush="Gray"
                   Margin="0,5,0,13"/>
@@ -196,7 +235,7 @@
                         HorizontalScrollBarVisibility="Auto"
                         VerticalScrollMode="Auto" 
                         VerticalScrollBarVisibility="Auto" 
-                        Grid.Row="2">
+                        Grid.Row="3">
 
                 <ListView ItemsSource="{x:Bind ViewModel.Projects, Mode=OneWay}" SelectionMode="Single"  >
                     <ListView.ItemTemplate>
@@ -229,8 +268,5 @@
             </ScrollView>
         </Grid>
     </Grid>
-    <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-    </StackPanel>-->
 </Window>
     

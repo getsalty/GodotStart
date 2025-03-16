@@ -5,9 +5,14 @@ using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ViewModels;
 using Windows.Graphics;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using static Godot_Start.Services.Settings;
 using Version = Godot_Start.Services.Version;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -27,13 +32,13 @@ namespace Godot_Start
         {
             this.InitializeComponent();
 
-            SizeInt32 a = new()
+            SizeInt32 windowSize = new()
             {
                 Height = 700,
                 Width = 1200
             };
 
-            this.AppWindow.Resize(a);
+            this.AppWindow.Resize(windowSize);
 
             ViewModel = new();
 
@@ -45,6 +50,11 @@ namespace Godot_Start
                 versionCheckbox.Click += (object sender, RoutedEventArgs e) => VersionType_Checkbox_Click(sender, e, versionType.Name);
 
                 VersionTypeCheckboxes.Children.Add(versionCheckbox);
+            }
+
+            foreach (var project in Settings.config.Projects)
+            {
+                ViewModel.Projects.Add(new() { Name = project.Name, DirectoryPath = project.DirectoryPath });
             }
 
             UpdateVersionDropdownItems();
@@ -360,6 +370,87 @@ namespace Godot_Start
             {
                 throw;
                 // Log error.
+            }
+        }
+
+        private async void Import_Project_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var senderButton = (Button)sender;
+            senderButton.IsEnabled = false;
+
+            var folder = await SelectFolder();
+            if (folder is null)
+            {
+                return;
+            }
+
+            var projectData = ParseProjectFile(folder);
+            if (projectData is null)
+            {
+                // freak out?
+                return;
+            }
+
+            ViewModel.Projects.Add(new() { Name = projectData.Name, DirectoryPath = projectData.DirectoryPath });
+
+            Settings.AddImportedProject(projectData);
+
+            senderButton.IsEnabled = true;
+        }
+
+        private async Task<StorageFolder?> SelectFolder()
+        {
+            FolderPicker openPicker = new()
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
+
+            openPicker.FileTypeFilter.Add("*");
+
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+
+            return await openPicker.PickSingleFolderAsync();
+        }
+
+        private static ProjectData? ParseProjectFile(StorageFolder directory)
+        {
+            try
+            {
+                List<string>? projectLines = File.ReadLines(directory.Path + "\\project.godot")?.ToList();
+
+                if (projectLines is null)
+                {
+                    return null;
+                }
+
+                ProjectData result = new() { Name = "Imported Project", DirectoryPath = directory.Path };
+
+                foreach (string line in projectLines)
+                {
+                    if (line.Contains("config/name"))
+                    {
+                        result.Name = line[13..^1];
+                    }
+                    else if (line.Contains("config/features"))
+                    {
+                        var packedStringArray = line[35..^2];
+                        var items = packedStringArray.Split("\", \"");
+
+                        result.Version = items[0];
+                        result.Type = items[1];
+                    }
+                    else if (line.Contains("config/icon"))
+                    {
+                        result.IconUID = line[13..^1];
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }
