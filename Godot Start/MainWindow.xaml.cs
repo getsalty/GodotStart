@@ -12,7 +12,6 @@ using ViewModels;
 using Windows.Graphics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using static Godot_Start.Services.Settings;
 using Version = Godot_Start.Services.Version;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -181,6 +180,18 @@ namespace Godot_Start
             }
 
             UpdateSelectedVersion();
+        }
+
+        private void Remove_Project_Button_Click(object sender, RoutedEventArgs e)
+        {
+            string directoryPath = (string)((Button)sender).Tag;
+
+            ProjectViewModel project = ViewModel.Projects.First(project => project.DirectoryPath == directoryPath);
+            int projectIndex = ViewModel.Projects.IndexOf(project);
+            ViewModel.Projects.RemoveAt(projectIndex);
+
+            Settings.ProjectData projectData = Settings.config.Projects.First(project => project.DirectoryPath == directoryPath);
+            Settings.RemoveImportedProject(projectData);
         }
 
         private void Download_Version_Button_Click(object sender, RoutedEventArgs e)
@@ -385,7 +396,7 @@ namespace Godot_Start
                 return;
             }
 
-            var projectData = ParseProjectFile(folder);
+            Settings.ProjectData? projectData = ParseProjectFile(folder);
             if (projectData is null)
             {
                 // freak out?
@@ -415,7 +426,7 @@ namespace Godot_Start
             return await openPicker.PickSingleFolderAsync();
         }
 
-        private static ProjectData? ParseProjectFile(StorageFolder directory)
+        private static Settings.ProjectData? ParseProjectFile(StorageFolder directory)
         {
             try
             {
@@ -426,7 +437,7 @@ namespace Godot_Start
                     return null;
                 }
 
-                ProjectData result = new() { Name = "Imported Project", DirectoryPath = directory.Path };
+                Settings.ProjectData result = new() { Name = "Imported Project", DirectoryPath = directory.Path };
 
                 foreach (string line in projectLines)
                 {

@@ -44,6 +44,16 @@ namespace Godot_Start.Services
             File.WriteAllText(path, newConfig);
         }
 
+        public static void RemoveImportedProject(ProjectData project)
+        {
+            var importedProjects = config.Projects.ToList();
+            importedProjects.Remove(project);
+            config.Projects = [.. importedProjects];
+
+            var newConfig = JsonSerializer.Serialize(config);
+            File.WriteAllText(path, newConfig);
+        }
+
         public static void RemoveInstalledVersion(string name)
         {
             var downloadList = config.Downloads.ToList();

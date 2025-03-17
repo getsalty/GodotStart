@@ -244,13 +244,14 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="25"/>
                                 </Grid.RowDefinitions>
 
-                                <Button Grid.Column="0"                                            
+                                <Button Grid.Column="0"
                                         Tag="{x:Bind Name}"
                                         ToolTipService.ToolTip="Open Project"
                                         Click="Button_Click">
@@ -261,6 +262,25 @@
                                            Text="{x:Bind Name}"
                                            Style="{ThemeResource BaseTextBlockStyle}"
                                            Margin="12,6,0,0"/>
+
+                                <Button Click="Remove_Project_Button_Click"
+                                        Tag="{x:Bind DirectoryPath}"
+                                        Grid.Column="2"
+                                        ToolTipService.ToolTip="Remove Project">
+                                    <Button.Resources>
+                                        <ResourceDictionary>
+                                            <ResourceDictionary.ThemeDictionaries>
+                                                <ResourceDictionary x:Key="Default">
+                                                    <SolidColorBrush x:Key="ButtonBackground" Color="#ff9a9a"/>
+                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#ffcccc"/>
+                                                    <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="LightGray"/>
+                                                </ResourceDictionary>
+                                            </ResourceDictionary.ThemeDictionaries>
+                                        </ResourceDictionary>
+                                    </Button.Resources>
+
+                                    <Image Source="/Assets/delete_black.png"/>
+                                </Button>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
