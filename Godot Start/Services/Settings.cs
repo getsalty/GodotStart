@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
-using Windows.Media.Protection.PlayReady;
 
 namespace Godot_Start.Services
 {
@@ -92,6 +89,18 @@ namespace Godot_Start.Services
             File.WriteAllText(path, newConfig);
         }
 
+        public static void UpdateWindowSizeType(Windows.Foundation.Size size)
+        {
+            config.WindowSize = new()
+            {
+                Height = (int)size.Height,
+                Width = (int)size.Width
+            };
+
+            var newConfig = JsonSerializer.Serialize(config);
+            File.WriteAllText(path, newConfig);
+        }
+
         private static Config ReadConfig()
         {
             if (!File.Exists(path))
@@ -136,6 +145,13 @@ namespace Godot_Start.Services
 
             [JsonPropertyName("projects")]
             public ProjectData[] Projects { get; set; } = [];
+
+            [JsonPropertyName("windowSize")]
+            public JsonSize WindowSize { get; set; } = new()
+            {
+                Height = 700,
+                Width = 1200
+            };
         }
 
         public class ProjectData
@@ -154,6 +170,15 @@ namespace Godot_Start.Services
 
             [JsonPropertyName("directoryPath")]
             public required string DirectoryPath { get; set; }
+        }
+
+        public class JsonSize
+        {
+            [JsonPropertyName("height")]
+            public required int Height { get; set; }
+
+            [JsonPropertyName("width")]
+            public required int Width { get; set; }
         }
     }
 }
