@@ -1,4 +1,5 @@
 using Godot_Start.Services;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -31,16 +32,20 @@ namespace Godot_Start
         {
             this.InitializeComponent();
 
-            SizeInt32 windowSize = new()
+
+
+            RectInt32 appWindow = new()
             {
-                Height = 700,
-                Width = 1200
+                Height = Settings.config.WindowSize.Height,
+                Width = Settings.config.WindowSize.Width,
+                Y = (DisplayArea.Primary.WorkArea.Height / 2) - (Settings.config.WindowSize.Height / 2),
+                X = (DisplayArea.Primary.WorkArea.Width / 2) - (Settings.config.WindowSize.Width / 2),
             };
 
-            this.AppWindow.Resize(windowSize);
+            this.AppWindow.MoveAndResize(appWindow);
+            this.SizeChanged += MainWindow_SizeChanged;
 
             ViewModel = new();
-
 
             foreach (var versionType in ViewModel.VersionTypes)
             {
@@ -117,6 +122,11 @@ namespace Godot_Start
 
             UpdatedFilteredVersions();
             UpdateSelectedVersion();
+        }
+
+        private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+        {
+            Settings.UpdateWindowSizeType(args.Size);
         }
 
         private void CurrentVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
