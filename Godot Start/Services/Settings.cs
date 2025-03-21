@@ -165,8 +165,11 @@ namespace Godot_Start.Services
             [JsonPropertyName("type")]
             public string? Type { get; set; }
 
-            [JsonPropertyName("iconUID")]
-            public string? IconUID { get; set; }
+            [JsonPropertyName("iconConfig")]
+            public string? IconConfig { get; set; }
+
+            [JsonPropertyName("iconPath")]
+            public required string IconPath { get; set; }
 
             [JsonPropertyName("directoryPath")]
             public required string DirectoryPath { get; set; }

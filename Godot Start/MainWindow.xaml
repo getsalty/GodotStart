@@ -243,6 +243,7 @@
                             <Grid DoubleTapped="ListView_DoubleTapped">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="37"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
@@ -255,17 +256,31 @@
                                         Tag="{x:Bind Name}"
                                         ToolTipService.ToolTip="Open Project"
                                         Click="Button_Click">
+                                    <Button.Resources>
+                                        <ResourceDictionary>
+                                            <ResourceDictionary.ThemeDictionaries>
+                                                <ResourceDictionary x:Key="Default">
+                                                    <SolidColorBrush x:Key="ButtonBackground" Color="#DFDFDF"/>
+                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#D0D0D0"/>
+                                                </ResourceDictionary>
+                                            </ResourceDictionary.ThemeDictionaries>
+                                        </ResourceDictionary>
+                                    </Button.Resources>
                                     <Image Source="/Assets/open_black.png"/>
                                 </Button>
 
-                                <TextBlock Grid.Column="1"
+                                <Image Grid.Column="1" 
+                                       Source="{Binding IconPath}"
+                                       Margin="12,2,0,2" />
+                                
+                                <TextBlock Grid.Column="2"
                                            Text="{x:Bind Name}"
                                            Style="{ThemeResource BaseTextBlockStyle}"
-                                           Margin="12,6,0,0"/>
+                                           Margin="12,4,0,0"/>
 
                                 <Button Click="Remove_Project_Button_Click"
                                         Tag="{x:Bind DirectoryPath}"
-                                        Grid.Column="2"
+                                        Grid.Column="3"
                                         ToolTipService.ToolTip="Remove Project">
                                     <Button.Resources>
                                         <ResourceDictionary>
@@ -273,7 +288,6 @@
                                                 <ResourceDictionary x:Key="Default">
                                                     <SolidColorBrush x:Key="ButtonBackground" Color="#ff9a9a"/>
                                                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#ffcccc"/>
-                                                    <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="LightGray"/>
                                                 </ResourceDictionary>
                                             </ResourceDictionary.ThemeDictionaries>
                                         </ResourceDictionary>

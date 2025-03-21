@@ -21,14 +21,14 @@ namespace ViewModels
         {
             for (int i = 0; i < versionTypeNames.Length; i++)
             {
-                VersionTypes.Add(new VersionTypesViewModel { Name = versionTypeNames[i] });
+                VersionTypes.Add(new VersionTypeViewModel { Name = versionTypeNames[i] });
             }
         }
 
         public ObservableCollection<VersionViewModel> Versions { get; } = [];
         public ObservableCollection<VersionViewModel> FilteredVersions { get; } = [];
         public ObservableCollection<VersionViewModel> DownloadedVersions { get; } = [];
-        public ObservableCollection<VersionTypesViewModel> VersionTypes { get; } = [];
+        public ObservableCollection<VersionTypeViewModel> VersionTypes { get; } = [];
         public ObservableCollection<ProjectViewModel> Projects { get; } = [];
 
 
@@ -59,7 +59,7 @@ namespace ViewModels
 
 
     [ViewModel]
-    public partial class VersionTypesViewModel
+    public partial class VersionTypeViewModel
     {
         [Property]
         private string _name;
@@ -77,5 +77,8 @@ namespace ViewModels
 
         [Property]
         private string _directoryPath;
+
+        [Property]
+        private string _iconPath;
     }
 }
