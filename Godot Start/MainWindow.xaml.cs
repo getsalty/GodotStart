@@ -58,7 +58,12 @@ namespace Godot_Start
 
             foreach (var project in Settings.config.Projects)
             {
-                ViewModel.Projects.Add(new() { Name = project.Name, DirectoryPath = project.DirectoryPath });
+                ViewModel.Projects.Add(new()
+                {
+                    Name = project.Name,
+                    DirectoryPath = project.DirectoryPath,
+                    IconPath = project.IconPath
+                });
             }
 
             UpdateVersionDropdownItems();
@@ -116,7 +121,15 @@ namespace Godot_Start
                 var currentAsset = version.Assets.ToList().Find(asset => asset.Name.Contains(versionPostfix));
                 var isDownloaded = Settings.config.Downloads.ToList().Contains(currentAsset?.Name ?? "");
 
-                var newItem = new VersionViewModel { Name = version.Name, Variant = variant, CreatedAt = version.CreatedAt, ShowDelete = isDownloaded, ShowDownload = !isDownloaded, ShowPending = false };
+                var newItem = new VersionViewModel
+                {
+                    Name = version.Name,
+                    Variant = variant,
+                    CreatedAt = version.CreatedAt,
+                    ShowDelete = isDownloaded,
+                    ShowDownload = !isDownloaded,
+                    ShowPending = false
+                };
                 ViewModel.Versions.Add(newItem);
             }
 
@@ -414,7 +427,12 @@ namespace Godot_Start
                 return;
             }
 
-            ViewModel.Projects.Add(new() { Name = projectData.Name, DirectoryPath = projectData.DirectoryPath });
+            ViewModel.Projects.Add(new()
+            {
+                Name = projectData.Name,
+                DirectoryPath = projectData.DirectoryPath,
+                IconPath = projectData.IconPath
+            });
 
             Settings.AddImportedProject(projectData);
 
@@ -447,7 +465,12 @@ namespace Godot_Start
                     return null;
                 }
 
-                Settings.ProjectData result = new() { Name = "Imported Project", DirectoryPath = directory.Path };
+                Settings.ProjectData result = new()
+                {
+                    Name = "Imported Project",
+                    DirectoryPath = directory.Path,
+                    IconPath = directory.Path + "\\icon.svg"
+                };
 
                 foreach (string line in projectLines)
                 {
@@ -465,8 +488,17 @@ namespace Godot_Start
                     }
                     else if (line.Contains("config/icon"))
                     {
-                        result.IconUID = line[13..^1];
+                        result.IconConfig = line[13..^1];
                     }
+                }
+
+                if (result.IconConfig?.StartsWith("uid://") ?? false)
+                {
+                    // TODO create directory parser for all ".import" files to check if the UIDs match, then return the non ".import" file once found. 
+                }
+                else if (result.IconConfig?.StartsWith("res://") ?? false)
+                {
+                    result.IconPath = directory.Path + "\\" + result.IconConfig![6..].Replace("/", "\\");
                 }
 
                 return result;
